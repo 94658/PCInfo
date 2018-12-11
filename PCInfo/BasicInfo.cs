@@ -177,17 +177,11 @@ namespace PCInfo
                 Console.WriteLine(" ");
 
                 Console.WriteLine(" ");
-                Console.WriteLine("----Windows Update Info----");
+                Console.WriteLine("----Windows Installed Apps Info----");
                 Console.WriteLine(GetX64Installedsoftware());
                 
 
-                //StreamWriter sw = new StreamWriter(@".\PCInfo.txt");
-                //sw.AutoFlush = true;
-                //Console.SetOut(sw);
-                //Console.Out.Close();
-                //sw = new StreamWriter(Console.OpenStandardOutput());
-                //sw.AutoFlush = true;
-                //Console.SetOut(sw);
+               
 
             }
 
