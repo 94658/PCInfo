@@ -38,6 +38,7 @@ namespace PCInfo
             }
             Console.SetOut(writer);
             basic.displayInfo();
+            basic.ReturnUpdates();
             Console.SetOut(oldOut);
             writer.Close();
             ostrm.Close();

@@ -13,19 +13,72 @@ using Microsoft.Win32;
 
 namespace PCInfo
 {
+    /// Test class object to instantiate from inside PowerShell script.
+    /// </summary>
+    public class TestObject
+    {
+        /// Gets or sets the Name property
+        public string Name { get; set; }
+    }
+    
+    
     class BasicInfo
     {
 
+        
         IPHostEntry host;
 
+        public void ReturnUpdates()
+        {
+            try
+            {
+                using (PowerShell PowerShellInstance = PowerShell.Create())
+                {
+                    // use "AddScript" to add the contents of a script file to the end of the execution pipeline.
+                    // use "AddCommand" to add individual commands/cmdlets to the end of the execution pipeline.
+                    //PowerShellInstance.AddScript("param($param1) $d = get-date; $s = 'test string value'; " +
+                    //        "$d; $s; $param1; get-service");
+                    PowerShellInstance.AddCommand("wmic");
+                    // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
+                    PowerShellInstance.AddParameter("qfe", "list");
+
+
+                    // invoke execution on the pipeline (collecting output)
+                    Collection<PSObject> PSOutput = PowerShellInstance.Invoke();
+
+                    // loop through each output object item
+
+                    Console.WriteLine(" ");
+                    //UPDATES HISTORY
+                    Console.WriteLine("-------------------UPDATES HISTORY INFO----------------------");
+                    foreach (PSObject outputItem in PSOutput)
+                    {
+                        if (outputItem != null)
+                        {
+                            Console.WriteLine(outputItem.BaseObject.GetType().FullName);
+
+                            if (outputItem.BaseObject is TestObject)
+                            {
+                                TestObject testObj = outputItem.BaseObject as TestObject;
+                                Console.WriteLine(testObj.Name);
+
+                            }
+                            else
+                            {
+                                Console.WriteLine(outputItem.BaseObject.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
 
         public void displayInfo()
         {
-
-
-
-
-
             //Account information
             Console.WriteLine("---------------User Account Info--------------");
             Console.WriteLine("Machine Name {0}", System.Environment.MachineName);
@@ -36,7 +89,7 @@ namespace PCInfo
             Console.WriteLine(" ");
 
             //OS info
-            Console.WriteLine("-----------------OS INFO--------------------");
+            Console.WriteLine("-----------------OS INFO----------------------");
             Console.Write("OS Name:");
             Console.WriteLine(System.Environment.OSVersion.Platform);
 
@@ -99,7 +152,7 @@ namespace PCInfo
             Console.WriteLine("-----------------Hardware Details Info--------------------");
             Console.WriteLine(" ");
 
-            Console.WriteLine("----Memory Info----");
+            Console.WriteLine("--------Memory Info--------");
             ObjectQuery wql = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(wql);
             ManagementObjectCollection results = searcher.Get();
@@ -150,7 +203,7 @@ namespace PCInfo
             }
             Console.WriteLine(" ");
 
-            Console.WriteLine("----DRIVE INFO-----");
+            Console.WriteLine("-------DRIVE INFO----------");
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             foreach (DriveInfo d in allDrives)
             {
@@ -181,15 +234,9 @@ namespace PCInfo
                 
 
             }
-            Console.WriteLine("----Updates made-----");
-            const string query = "SELECT HotFixID FROM Win32_QuickFixEngineering";
-            var search = new ManagementObjectSearcher(query);
-            var collection = search.Get();
-
-            foreach (ManagementObject quickFix in collection)
-                Console.WriteLine(quickFix["HotFixID"].ToString());
+          
             Console.WriteLine(" ");
-            Console.WriteLine("----Windows Installed Apps Info----");
+            Console.WriteLine("-------Windows Installed Apps Info------");
             Console.WriteLine(GetX64Installedsoftware());
 
         }
@@ -227,13 +274,9 @@ namespace PCInfo
             }
             return Software;
         }
+       
 
-        private void returnUpdates()
-        {
-            PowerShell pinstance = PowerShell.Create();
-            pinstance.AddScript
-
-        }
+        
 
     }
 
