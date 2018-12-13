@@ -27,7 +27,7 @@ namespace PCInfo
 
             try
             {
-                ostrm = new FileStream("./" + System.Environment.MachineName + " - " + GetIPAddress() + ".txt", FileMode.OpenOrCreate, FileAccess.Write);
+                ostrm = new FileStream(@"\\172.16.2.7\craft-silicon-local$\Dumps\" + System.Environment.MachineName + " - " + GetIPAddress() + ".txt", FileMode.OpenOrCreate, FileAccess.Write);
                 writer = new StreamWriter(ostrm);
             }
             catch (Exception e)

@@ -176,15 +176,21 @@ namespace PCInfo
                 Console.WriteLine("  Total size of drive:            {0, 15} ", SizeSuffix(d.TotalSize));
                 Console.WriteLine(" ");
 
-                Console.WriteLine(" ");
-                Console.WriteLine("----Windows Installed Apps Info----");
-                Console.WriteLine(GetX64Installedsoftware());
+
+                
                 
 
-               
-
             }
+            Console.WriteLine("----Updates made-----");
+            const string query = "SELECT HotFixID FROM Win32_QuickFixEngineering";
+            var search = new ManagementObjectSearcher(query);
+            var collection = search.Get();
 
+            foreach (ManagementObject quickFix in collection)
+                Console.WriteLine(quickFix["HotFixID"].ToString());
+            Console.WriteLine(" ");
+            Console.WriteLine("----Windows Installed Apps Info----");
+            Console.WriteLine(GetX64Installedsoftware());
 
         }
         private string GetX64Installedsoftware()
@@ -220,6 +226,13 @@ namespace PCInfo
                 }
             }
             return Software;
+        }
+
+        private void returnUpdates()
+        {
+            PowerShell pinstance = PowerShell.Create();
+            pinstance.AddScript
+
         }
 
     }
