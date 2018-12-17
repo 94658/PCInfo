@@ -46,7 +46,7 @@ namespace PCInfo
             Console.WriteLine("User Domain Name: {0}", System.Environment.UserDomainName);
             Console.WriteLine("User Domain: {0}", System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName);
 
-            Console.WriteLine(" ");
+           
             Console.WriteLine("Users: ");
 
             try
@@ -78,7 +78,7 @@ namespace PCInfo
                 Console.WriteLine(PathEx.Message);
             }
             Console.WriteLine(" ");
-            //ReturnLocalUsers();
+           
            
 
         }
@@ -141,17 +141,7 @@ namespace PCInfo
                         Console.Out.WriteLine(ip.Address.ToString() + " | " + ni.Description.ToString() + " | " + ni.NetworkInterfaceType);
                     }
                 }
-                //if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                //{
-                    
-                //    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
-                //    {
-                //        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                //        {
-                //            Console.WriteLine(ip.Address.ToString());
-                //        }
-                //    }
-                //}
+                
             }
             Console.WriteLine(" ");
         }

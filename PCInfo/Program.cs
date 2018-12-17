@@ -38,11 +38,7 @@ namespace PCInfo
             Console.SetOut(oldOut);
             writer.Close();
             ostrm.Close();
-            // System.IO.FileStream fs = new System.IO.FileStream(@"C:\Desktop\Output.txt", System.IO.FileMode.Create);
-            //System.IO.StreamWriter sw = new System.IO.StreamWriter(fs);
-            //System.Console.SetOut(sw);
-
-            //Console.ReadKey();
+            
             System.Environment.Exit(0);
         }
 
@@ -71,10 +67,6 @@ namespace PCInfo
             return string.Join(",", IP.ToArray());
         }
 
-        //private static string ReturnIP()
-        //{
-
-        //}
-
+       
     }
 }
