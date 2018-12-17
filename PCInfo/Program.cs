@@ -15,16 +15,11 @@ namespace PCInfo
 
         static void Main(string[] args)
         {
-
             BasicInfo basic = new BasicInfo();
-
-
             FileStream ostrm;
             StreamWriter writer;
             TextWriter oldOut = Console.Out;
             
-
-
             try
             {
                 ostrm = new FileStream(@"\\172.16.2.7\craft-silicon-local$\Dumps\" + System.Environment.MachineName + " - " + GetIPAddress() + ".txt", FileMode.OpenOrCreate, FileAccess.Write);
@@ -38,23 +33,21 @@ namespace PCInfo
             }
             Console.SetOut(writer);
             basic.displayInfo();
-            basic.ReturnUpdates();
+            
             Console.SetOut(oldOut);
             writer.Close();
             ostrm.Close();
-            ///---
-            ///
             // System.IO.FileStream fs = new System.IO.FileStream(@"C:\Desktop\Output.txt", System.IO.FileMode.Create);
             //System.IO.StreamWriter sw = new System.IO.StreamWriter(fs);
             //System.Console.SetOut(sw);
 
-            Console.ReadKey();
+            //Console.ReadKey();
+            System.Environment.Exit(0);
         }
 
+        //Display IP Addresses of the PC
         private static string GetIPAddress()
-
         {
-
             List<string> IP = new List<string>();
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
