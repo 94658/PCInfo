@@ -17,6 +17,7 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Net.Sockets;
 
 namespace PCInfo
 {
@@ -45,17 +46,39 @@ namespace PCInfo
             Console.WriteLine("User Domain Name: {0}", System.Environment.UserDomainName);
             Console.WriteLine("User Domain: {0}", System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName);
 
-            //SelectQuery query = new SelectQuery("Win32_UserAccount"); //,“Domain =’PCNAME’”
-            //Console.WriteLine(" ");
-            //ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
-            //Console.WriteLine("List of users on this machine");
-
-            //foreach (ManagementObject envVar in searcher.Get())
-            //{
-            //    Console.WriteLine(" Username : {0}", envVar["Name"]);//List of Users
-            //}
             Console.WriteLine(" ");
-            ReturnLocalUsers();
+            Console.WriteLine("Users: ");
+
+            try
+            {
+                string dirPath = @"C:\\Users";
+
+                List<string> dirs = new List<string>(Directory.EnumerateDirectories(dirPath));
+
+                foreach (var dir in dirs)
+
+                {
+                    string currentfolder = dir.Substring(dir.LastIndexOf("\\") + 1);
+                    var stringcheck = new List<string> {"Default","All Users","Default User","Public" };
+                    bool strbool = stringcheck.Contains(currentfolder);
+                    if (strbool == false)
+                    {
+                        Console.WriteLine("      {0}", dir.Substring(dir.LastIndexOf("\\") + 1));
+                    }    
+                    
+                }
+                //Console.WriteLine("{0} directories found.", dirs.Count);
+            }
+            catch (UnauthorizedAccessException UAEx)
+            {
+                Console.WriteLine(UAEx.Message);
+            }
+            catch (PathTooLongException PathEx)
+            {
+                Console.WriteLine(PathEx.Message);
+            }
+            Console.WriteLine(" ");
+            //ReturnLocalUsers();
            
 
         }
@@ -106,21 +129,33 @@ namespace PCInfo
 
             Console.WriteLine(" ");
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+
             {
-                if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                foreach (var ip in ni.GetIPProperties().UnicastAddresses)
                 {
-                    Console.Write(ni.Name + ":  ");
-                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    
+                    if ((ni.OperationalStatus == OperationalStatus.Up)
+                    && (ip.Address.AddressFamily == AddressFamily.InterNetwork) && (!ni.Description.ToString().Contains("Virtual")) && (!ni.Description.ToString().Contains("Loopback")))
                     {
-                        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        {
-                            Console.WriteLine(ip.Address.ToString());
-                        }
+                        Console.Write(ni.Name + ":  ");
+                        Console.Out.WriteLine(ip.Address.ToString() + " | " + ni.Description.ToString() + " | " + ni.NetworkInterfaceType);
                     }
                 }
+                //if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                //{
+                    
+                //    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                //    {
+                //        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                //        {
+                //            Console.WriteLine(ip.Address.ToString());
+                //        }
+                //    }
+                //}
             }
             Console.WriteLine(" ");
         }
+
 
         //Hardware Details Info
         private void displayHardwareDetails()

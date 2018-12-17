@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace PCInfo
 {
@@ -48,26 +49,32 @@ namespace PCInfo
         //Display IP Addresses of the PC
         private static string GetIPAddress()
         {
-            List<string> IP = new List<string>();
+
+            
+             List<string> IP = new List<string>();
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                {
-                    
                     foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
                     {
-                        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        if ((ni.OperationalStatus == OperationalStatus.Up)
+                        && (ip.Address.AddressFamily == AddressFamily.InterNetwork) && (!ni.Description.ToString().Contains("Virtual")) && (!ni.Description.ToString().Contains("Loopback")) && (ip.Address.ToString().Contains("172.")))
                         {
-                           IP.Add(ip.Address.ToString());
+                            IP.Add(ip.Address.ToString());
                         }
                     }
-                }
-               
+
+                
+
+
             }
 
-            return string.Join(",",IP.ToArray());
-
+            return string.Join(",", IP.ToArray());
         }
+
+        //private static string ReturnIP()
+        //{
+
+        //}
 
     }
 }
